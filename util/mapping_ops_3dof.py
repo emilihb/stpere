@@ -1,6 +1,7 @@
 import numpy as np
 from util import normalize
 
+
 def compose(a, b, Pa=None, Pb=None):
     """2d composition between 'a' and 'b' with covariance -if provided.
 
@@ -19,48 +20,33 @@ def compose(a, b, Pa=None, Pb=None):
     st = np.sin(a[2])
     ct = np.cos(a[2])
 
+    r = np.array([
+        b[0]*ct - b[1]*st + a[0],
+        b[0]*st + b[1]*ct + a[1]])
+
+    if len(b) is 3:
+        r = np.r_[r, normalize(a[2:] + b[2:])]
+
     P = None
-    if len(a) is 3:
-        if len(b) is 2:
-            r = np.array([
-                b[0]*ct - b[1]*st + a[0],
-                b[0]*st + b[1]*ct + a[1]])
+    if Pa is not None and Pb is not None:
+        J1 = np.array([
+            [1, 0, -b[0]*st - b[1]*ct],
+            [0, 1, b[0]*ct - b[1]*st],
+            [0, 0, 1]])
 
-            if Pa is not None and Pb is not None:
-                J1 = np.array([
-                    [1, 0, -b[0]*st - b[1]*ct],
-                    [0, 1, b[0]*ct - b[1]*st]])
-
-                J2 = np.array([
-                    [ct, -st],
-                    [st, ct]])
-
-                P = np.dot(np.dot(J1, Pa), J1.T) + np.dot(np.dot(J2, Pb), J2.T)
-            return (r, P)
-
-        elif len(b) is 3:
-            r = np.array([
-                b[0]*ct - b[1]*st + a[0],
-                b[0]*st + b[1]*ct + a[1],
-                normalize(a[2] + b[2])])
-
-            if Pa is not None and Pb is not None:
-                J1 = np.array([
-                    [1, 0, -b[0]*st - b[1]*ct],
-                    [0, 1, b[0]*ct - b[1]*st],
-                    [0, 0, 1]])
-
-                J2 = np.array([
-                    [ct, -st, 0],
-                    [st, ct, 0],
-                    [0, 0, 1]])
-
-                P = np.dot(np.dot(J1, Pa), J1.T) + np.dot(np.dot(J2, Pb), J2.T)
-            return (r, P)
+        J2 = np.array([
+            [ct, -st, 0],
+            [st, ct, 0],
+            [0, 0, 1]])
+        if len(Pb) is 2:
+            P = np.dot(np.dot(J1[0:2], Pa), J1[0:2].T) + np.dot(np.dot(J2[0:2, 0:2], Pb), J2[0:2, 0:2].T)
+        else:
+            P = np.dot(np.dot(J1, Pa), J1.T) + np.dot(np.dot(J2, Pb), J2.T)
+    return (r, P)
 
 
 def inv(a, Pa=None):
-    """2d inversion with covariance -if provided.
+    """3dof inversion with covariance -if provided.
 
     :param a: [x, y, theta] row/column array
     :param Pa: a covariance array
@@ -73,32 +59,34 @@ def inv(a, Pa=None):
     st = np.sin(a[2])
     ct = np.cos(a[2])
 
+    r = np.array([
+        -a[0]*ct - a[1]*st,
+        a[0]*st - a[1]*ct,
+        -a[2]])
+
     P = None
-    if len(a) is 3:
-        r = np.array([
-            -a[0]*ct - a[1]*st,
-            a[0]*st - a[1]*ct,
-            -a[2]])
+    if Pa is not None:
+        Ja = np.array([
+            [-ct, -st, a[0]*st - a[1]*ct],
+            [st, -ct, a[0]*ct + a[1]*st],
+            [0, 0, -1]])
 
-        if Pa is not None:
-            J = np.array([
-                [-ct, -st, a[0]*st - a[1]*ct],
-                [st, -ct, a[0]*ct + a[1]*st],
-                [0, 0, -1]])
-
-            P = np.dot(np.dot(J, Pa), J.T)
-        return (r, P)
+        P = np.dot(np.dot(Ja, Pa), Ja.T)
+    return (r, P)
 
 
 def main():
-    a = np.array([5.0, 5.0, np.pi])
-    Pa = np.array([[0.5, 0, 0], [0, 0.5, 0], [0, 0, 0.5]])
-    b = np.array([1.0, 2.0, -np.pi])
+    a = np.array([2.0, 2.0, np.pi])
+    Pa = np.diag([0.1, 0.1, 0.1])
+    b = np.array([2.0, 2.0])
+    Pb = np.diag([0.1, 0.1])
+    b1 = np.array([2.0, 2.0, np.pi])
+    Pb1 = np.diag([0.1, 0.1, 0.1])
 
-    print "Compose:\n", compose(a, b)
-    rinv,Pinv = inv(a, Pa)
-    print "Inversion:\n", rinv
-    print "Inversion:\n", compose(rinv, a)
+    print "Compose:\n", compose(a, b1)
+    print "Compose:\n", compose(a, b1, Pa, Pb1)
+    print "Compose:\n", compose(a, b, Pa, Pb)
+    print "Inv:\n", inv(a, Pa)
 
 if __name__ == "__main__":
     main()
