@@ -1,13 +1,15 @@
 import numpy as np
 from util import normalize
 
-
 def compose(a, b, Pa=None, Pb=None):
-    """Returns 2d composition between 'a' and 'b' and its
-    covariance if 'Pa' and 'Pb' are provided.
-    'a' is an [x, y, theta] row/column array
-    'b' is an [x, y, theta] or [x, y] row/column array"""
+    """2d composition between 'a' and 'b' with covariance -if provided.
 
+    :param a: [x, y, theta] row/column array
+    :param b: [x, y, theta] or [x, y] row/column array
+    :param Pa: a covariance array
+    :param Pb: b covariance array
+    :returns composition with covariance
+    """
     # ensure row vector for internal access
     if len(a.shape) is 2:
         a = a.T[0]
@@ -58,10 +60,12 @@ def compose(a, b, Pa=None, Pb=None):
 
 
 def inv(a, Pa=None):
-    """Returns 2d inversion and its covariance.
-    if 'Pa' is not provided covariance is None.
-    'a' is an [x, y, theta] row/column array"""
+    """2d inversion with covariance -if provided.
 
+    :param a: [x, y, theta] row/column array
+    :param Pa: a covariance array
+    :returns: inversion with covariance
+    """
     # ensure row vector for internal access
     if len(a.shape) is 2:
         a = a.T[0]
@@ -92,7 +96,9 @@ def main():
     b = np.array([1.0, 2.0, -np.pi])
 
     print "Compose:\n", compose(a, b)
-    print "Inversion:\n", inv(a, Pa)
+    rinv,Pinv = inv(a, Pa)
+    print "Inversion:\n", rinv
+    print "Inversion:\n", compose(rinv, a)
 
 if __name__ == "__main__":
     main()
