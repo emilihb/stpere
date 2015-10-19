@@ -2,13 +2,18 @@ import numpy as np
 from util import normalize
 
 def compose(a, b, Pa=None, Pb=None):
-    """6dof composition between 'a' and 'b' with covariance -if provided.
+    """6DoF composition between 'a' and 'b' with covariance -if provided.
 
-    :param a: [x, y, z, roll, pitch, yaw] row/column array
-    :param b: [x, y, z, roll, pitch, yaw] or [x, y, z] row/column array
+    :param a: [x, y, z, roll, pitch, yaw] row/column vector
+    :param b: [x, y, z, roll, pitch, yaw] or [x, y, z] row/column vector
     :param Pa: a 6x6 covariance array
     :param Pb: b 6x6 or 3x3 covariance array
-    :returns composition with covariance
+    :type a: 6-element array
+    :type b: 3 or 6-element array
+    :type Pa: 6x6 array
+    :type Pb: 3x3 or 6x6 array
+    :return: composition with covariance -if provided
+    :rtype: 2-element tuple (r, P) or (r, None)
     """
     # ensure row vector for internal access
     if len(a.shape) is 2:
@@ -57,11 +62,13 @@ def compose(a, b, Pa=None, Pb=None):
 
 
 def inv(a, Pa=None):
-    """6Dof inversion with covariance -if provided.
+    """6DoF inversion with covariance -if provided.
 
-    :param a: [x, y, z, roll, pitch, yaw] row/column array
+    :param a: [x, y, z, roll, pitch, yaw] row/column vector
     :param Pa: a 6x6 covariance array
-    :returns: inversion with covariance
+    :type a: 6-element array
+    :return: inversion with covariance -if provided
+    :rtype: 2-element tuple (r, P) or (r, None);
     """
     # ensure row vector for internal access
     if len(a.shape) is 2:

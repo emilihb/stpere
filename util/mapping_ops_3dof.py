@@ -3,13 +3,19 @@ from util import normalize
 
 
 def compose(a, b, Pa=None, Pb=None):
-    """2d composition between 'a' and 'b' with covariance -if provided.
+    """3dof [x, y, theta] composition between 'a' and 'b'
+    with covariance -if provided.
 
-    :param a: [x, y, theta] row/column array
-    :param b: [x, y, theta] or [x, y] row/column array
+    :param a: [x, y, theta] row/column vector
+    :param b: [x, y, theta] or [x, y] row/column vector
     :param Pa: a covariance array
     :param Pb: b covariance array
-    :returns composition with covariance
+    :type a: 3-element array
+    :type b: 2 or 3-element array
+    :type Pa: 3x3 array
+    :type Pb: 2x2 or 3x3 array
+    :return: composition with covariance -if provided
+    :rtype: 2-element tuple (r, P) or (r, None)
     """
     # ensure row vector for internal access
     if len(a.shape) is 2:
@@ -46,11 +52,14 @@ def compose(a, b, Pa=None, Pb=None):
 
 
 def inv(a, Pa=None):
-    """3dof inversion with covariance -if provided.
+    """3dof [x, y, theta] inversion with covariance -if provided.
 
-    :param a: [x, y, theta] row/column array
-    :param Pa: a covariance array
-    :returns: inversion with covariance
+    :param a: [x, y, theta] row/column vector
+    :param Pa: a covariance vector
+    :type a: 3-element array
+    :type Pa: 3x3 array
+    :return: inversion with covariance -if provided
+    :rtype: 2-element tuple (r, P) or (r, None)
     """
     # ensure row vector for internal access
     if len(a.shape) is 2:
