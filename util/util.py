@@ -6,19 +6,20 @@ def normalize(angle):
     return angle + (2 * np.pi) * np.floor((np.pi - angle) / (2 * np.pi))
 
 
-# def rotation_matrix(roll, pitch, yaw):
-#     """Returns 3d rotation matrix in rads."""
-#     sr = np.sin(roll)
-#     cr = np.cos(roll)
-#     sp = np.sin(pitch)
-#     cp = np.cos(pitch)
-#     sy = np.sin(yaw)
-#     cy = np.cos(yaw)
+def rpy(roll, pitch, yaw):
+    """Returns 3d rotation matrix in rads."""
+    sr = np.sin(roll)
+    cr = np.cos(roll)
+    sp = np.sin(pitch)
+    cp = np.cos(pitch)
+    sy = np.sin(yaw)
+    cy = np.cos(yaw)
 
-#     R = np.array([[cy * cp, -sy * cr + cy * sp * sr, sy * sr + cy * sp * cr],
-#                   [sy * cp, cy * cr + sr * sy * sp, -sr * cy + sy * sp * cr],
-#                   [-sp, cp * sr, cp * cr]])
-#     return R
+    return np.array([
+        [cy*cp, -sy*cr + cy*sp*sr, sy*sr + cy*sp*cr],
+        [sy*cp, cy*cr + sr*sy*sp, -sr*cy + sy*sp*cr],
+        [-sp, cp*sr, cp*cr]])
+
 
 
 # def homogeneous_matrix(x, y, z, roll, pitch, yaw):

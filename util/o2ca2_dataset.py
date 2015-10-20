@@ -1,6 +1,7 @@
 import numpy as np
 from itertools import islice
 
+
 class O2CA2Dataset:
     def __init__(self, filename, num_registers=None, comments="%", delimiter=" "):
         """ Loads files in a dictionary with a sensor id
@@ -13,7 +14,7 @@ class O2CA2Dataset:
         :type num_registers: integer > 0
         :type comments: character
         :type delimiter: character
-    """
+        """
         self._data = {}
 
         print num_registers
@@ -32,7 +33,7 @@ class O2CA2Dataset:
         Raises EOFError when one or more components are not present
 
         :return: sensor type and data register
-        :rtype: 2-element tuple(type, data)
+        :rtype: 2-element tuple (type, data)
         """
         try:
             _type = min(self._timestamp,  key=self._timestamp.get)
