@@ -1,5 +1,5 @@
-St. Pere Project
-================
+St Pere 
+========
 This a project created related with the work done for my PhD. 
 There's currently an implementatin of an 8-state EKF that uses
 constant velocity model with acceleration noise to estimate the
@@ -33,4 +33,3 @@ TODO
 	- 12-state EKF
 	- Scan matching algorithms (icp, probialisitic ICP, pIC)
 	
-
