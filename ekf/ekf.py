@@ -19,9 +19,9 @@ class EKFBase(object):
         :param z: measurement
         :param H: observation model
         :param R: observation noise
-        :type z: TODO
-        :type H: TODO
-        :type R: TODO
+        :type z: 1d array
+        :type H: 2d array
+        :type R: 2d array
         :return: updated state x and covariance P
         :rtype: 2-emement tuple (x, P)
         """
@@ -97,8 +97,8 @@ class EKF8State(EKFBase):
         :param x_prev: vector state at t-1 [x, y, z, yaw, u, v, w, r]
         :param P_prev: covariance at t-1
         :param dt: delta time abs(t - t-1)
-        :type x_prev: 1x8 array
-        :type P_prev: 8x8 array
+        :type x_prev: 1d array (8 element)
+        :type P_prev: 2d array (8x8 element)
         :type dt: float
         :return: predition x and covariance P
         :rtype: 2-emement tuple (x, P)

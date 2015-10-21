@@ -17,7 +17,6 @@ class O2CA2Dataset:
         """
         self._data = {}
 
-        print num_registers
         for k, v in filename.iteritems():
             with open(v) as f:
                 self._data[k] = np.genfromtxt(
